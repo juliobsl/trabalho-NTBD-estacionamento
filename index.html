@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Estacionamento</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
+    <!-- <script src='index.js'></script> -->
+    <script>
+        $(document).ready(function(){
+        
+            $.get("http://127.0.0.1:3000/clientes", function(data, status){
+                listaClientes(data);
+                
+            });
+            $.get("http://127.0.0.1:3000/carros", function(data, status){
+                listaCarros(data);
+                
+            });
+
+            $.post("http://127.0.0.1:3000/add_car_patio", {suggest: 'Olá!'}, function(result){
+                console.log(result);
+            });
+       
+        });
+
+
+        function listaClientes(clientes){
+            console.log(clientes);
+        }
+        function listaCarros(carros){
+            console.log(carros);
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
