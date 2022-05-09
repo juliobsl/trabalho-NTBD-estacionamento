@@ -1,0 +1,26 @@
+[
+  {
+    "codigo": 1,
+    "nome": "Júlio Brian",
+    "CPF": "999.999.999-08",
+    "data_cadastro": "2022-05-08"
+  },
+  {
+    "codigo": 1,
+    "nome": "Adriane Galisteu",
+    "CPF": "999.999.999-07",
+    "data_cadastro": "2022-05-07"
+  },
+  {
+    "codigo": 1,
+    "nome": "Roberto Carlos",
+    "CPF": "999.999.999-06",
+    "data_cadastro": "2022-05-06"
+  },
+  {
+    "codigo": 1,
+    "nome": "Silvio Santos",
+    "CPF": "999.999.999-05",
+    "data_cadastro": "2022-04-31"
+  }
+]
