@@ -7,21 +7,23 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'> -->
     <!-- <script src='index.js'></script> -->
     <script>
         $(document).ready(function(){
             listaClientes();
-            // listaPatio();
+            listaPatio();
         });
 
-        function addCarroPatio(idcar){
-            $.post("http://127.0.0.1:3000/add_car_patio", {idcarro: idcar}, function(result){
+        function addCarroPatio(codigocar,placa,modelo,idcli){    
+                 
+            $.post("http://127.0.0.1:3000/add_car_patio", {codigocar: codigocar,placa: placa,modelo: modelo, idcliente: idcli}, function(result){
                 listaCarrosPatio();
             });
         }
-        function rmCarroPatio(idcar){
-            $.post("http://127.0.0.1:3000/rm_car_patio", {idcarro: idcar}, function(result){
+        function rmCarroPatio(car){
+            $.post("http://127.0.0.1:3000/rm_car_patio", {carro: car}, function(result){
                 listaCarrosPatio();
             });
         }
@@ -32,15 +34,27 @@
                 var clientes = '';
                 data.forEach(cliente => {
                     clientes+=' <li class="w3-bar">'+
-                        '<span onclick="" class="w3-bar-item w3-btn w3-large w3-right">&#8595;</span>'+
+                        '<span onclick="exibeListaCarros(this.parentElement)" class="w3-bar-item w3-btn w3-large w3-right"><i class="	fa fa-info-circle"></i></span>'+
                         '<img src="avatar.png" class="w3-bar-item w3-circle" style="width:85px">'+
                         '<div class="w3-bar-item">'+
                             '<span class="w3-large">'+cliente.nome+'</span><br>'+
-                            '<span>Web Designer</span>'+
-                        '</div>'+
-                    '</li>';
+                            '<span>'+cliente.CPF+' | '+cliente.carros.length+' veículo(s)</span>'+
+                        '</div>';
+                    
+                        cliente.carros.forEach(carro=> {
+
+                            clientes+='<br style="clear:both;"><div class="w3-bar-item lista-carros">'+
+                            '<div class="w3-row-padding">'+
+                                '<div class="w3-col l6 w3-card-4 w3-round w3-teal ">'+
+                                        '<span ondblclick="addCarroPatio('+carro.codigo+',&#039;'+carro.placa+'&#039;,&#039;'+carro.modelo+'&#039;,'+cliente.codigo+')" style="font-size:0.8em;font-weight:bold;padding:3px;cursor:pointer"><i class="fa fa-car w3-margin-right"></i>'+carro.placa+'/'+carro.modelo+'</span>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+
+                        });
+                    clientes+='</li>';
                 });
-                $('#exibe_clientes').html(clientes);
+               $('#exibe_clientes').html(clientes);
 
             });
         }
@@ -50,7 +64,29 @@
             });
 
         }
+
+        function exibeListaCarros(cliente){          
+            $(cliente).find( ".lista-carros" ).toggleClass('show');          
+           
+        }
     </script>
+    <style>
+        .lista-carros{
+            width: 100%!important;
+            max-height: 0px;
+            padding: 0px!important;
+            overflow: hidden;
+            transition: all 1s ease-in-out;
+          
+        }
+
+        .lista-carros.show{
+            max-height: 100%;
+            padding: 8px 16px!important;
+            transition: all 1s ease-in-out;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -79,7 +115,7 @@
             <div class="w3-col l6">
                 <h1>Clientes</h1>
                 <ul class="w3-ul w3-card-4" id="exibe_clientes">
-                   
+                   <p>Carregando...</p>
                 </ul>
                 
 
