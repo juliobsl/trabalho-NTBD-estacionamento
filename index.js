@@ -17,8 +17,9 @@ const port = 3000
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 app.get('/clientes', (req, res) => {
-    console.log('Acessando...');
+    console.log('Listando clientes...');
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
           var dbo = db.db("estacionamento");
@@ -29,43 +30,30 @@ app.get('/clientes', (req, res) => {
               db.close();         
             });
       });
-})
+});
 
-app.get('/carros', (req, res) => {
-    console.log('Acessando...');
+app.get('/patio', (req, res) => {
+    console.log('Listando pátio...');
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
           var dbo = db.db("estacionamento");
-          dbo.collection("carros").find({}).toArray(function(err, result) {
+          dbo.collection("patio").find({}).toArray(function(err, result) {
               if (err) throw err;
               //console.log(result);
               res.send(result);     
               db.close();         
             });
       });
-})
+});
 
-app.post('/add_car_patio',(request,response) => {
-    //code to perform particular action.
-    //To access POST variable use req.body()methods.
-    console.log(request.body.suggest);
+app.post('/add_car_patio',(request,response) => {   
+    console.log(request.body.idcarro);
+});
+app.post('/rm_car_patio',(request,response) => {   
+    console.log(request.body.idcarro);
 });
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Servidor na porta: ${port}`)
 })
-
-
-function loadClientes(){
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-          var dbo = db.db("estacionamento");
-          dbo.collection("clientes").find({}).toArray(function(err, result) {
-              if (err) throw err;
-              console.log(result);
-              return result;     
-              db.close();         
-            });
-      });
-};
