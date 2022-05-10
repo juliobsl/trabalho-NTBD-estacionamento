@@ -12,26 +12,18 @@
     <!-- <script src='index.js'></script> -->
     <script>
         $(document).ready(function(){
-            listaClientes();
-            listaPatio();
+            listaClientes();            
         });
-
-        function addCarroPatio(codigocar,placa,modelo,idcli){    
-                 
-            $.post("http://127.0.0.1:3000/add_car_patio", {codigocar: codigocar,placa: placa,modelo: modelo, idcliente: idcli}, function(result){
-                listaCarrosPatio();
-            });
-        }
-        function rmCarroPatio(car){
-            $.post("http://127.0.0.1:3000/rm_car_patio", {carro: car}, function(result){
-                listaCarrosPatio();
-            });
-        }
+        var todosclientes;
+       
+     
 
         function listaClientes(){
            $.get("http://127.0.0.1:3000/clientes", function(data, status){
                 console.log(data);
                 var clientes = '';
+                todosclientes = data;
+                listaPatio(todosclientes);
                 data.forEach(cliente => {
                     clientes+=' <li class="w3-bar">'+
                         '<span onclick="exibeListaCarros(this.parentElement)" class="w3-bar-item w3-btn w3-large w3-right"><i class="	fa fa-info-circle"></i></span>'+
@@ -58,9 +50,39 @@
 
             });
         }
-        function listaPatio(){
+        function addCarroPatio(codigocar,placa,modelo,idcli){    
+             console.log('adicionando carro no pátio');
+             setTimeout(function(){listaPatio(todosclientes);},200)
+            $.post("http://127.0.0.1:3000/add_car_patio", {codigocar: codigocar,placa: placa,modelo: modelo, idcliente: idcli}, function(result){
+                console.log(result);
+                
+            });
+        }
+        function listaPatio(clientes){
+            console.log('listando patio');
             $.get("http://127.0.0.1:3000/patio", function(data, status){
-               console.log(data);           
+               console.log(data);    
+                var carros = '';
+                data.forEach(controle => {
+                    const cliente = clientes.find(obj => {
+                        return obj.codigo == controle.idcliente
+                    })
+                    carros+=' <div class="w3-col l6 w3-margin-top">'+
+                        '<div class="w3-card-4 w3-green w3-round w3-padding">'+
+                            '<span class="w3-small" title="'+controle.data+'"><i class="fa fa-caret-square-o-right"></i> <b>Entrou</b> ás '+controle.data+'</span><br>'+
+                            '<span class="w3-small" title="'+controle.data+'"><i class="fa fa-car"></i> '+controle.placa+' / '+controle.modelo+' <br> <i class="fa fa-user-o"></i> '+cliente.nome+'</span>'+
+                        '</div>'+
+                   '</div>';
+                    
+                    carros+='</li>';
+                });
+                if(data.length==0){
+                    $('#exibe_patio').html('<p>Nenhum veículo no pátio.</p>');
+                }else{
+                    $('#exibe_patio').html(carros);
+                }
+              
+               
             });
 
         }
@@ -89,18 +111,16 @@
     </style>
 </head>
 <body>
-
+   
     
 <!-- Sidebar -->
-<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:25%">
-    <h3 class="w3-bar-item">Layout</h3>
-    <a href="#" class="w3-bar-item w3-button">Divido</a>
-    <a href="#" class="w3-bar-item w3-button">Somente Clientes</a>
-    <a href="#" class="w3-bar-item w3-button">Somente Pátio</a>
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:18%">
+    <h3 class="w3-bar-item">Informações</h3>
+    <p class="w3-small w3-padding">Projeto desenvolvido pelo aluno <b>Júlio Brian</b>. <br>Objetivo: demonstrar a utilização do banco não-relacional MongoDB em uma aplicação Web utilizando NodeJS no servidor, para conexão no banco, e Javascript (Jquery), para exibição dos dados.</p>
   </div>
   
   <!-- Page Content -->
-  <div style="margin-left:25%">
+  <div style="margin-left:18%">
   
   <div class="w3-container w3-teal" style="background: url(bg.jpg);background-position: center;background-size: cover;">
     <h1 style="text-shadow: 3px 3px 3px #ffc107;">Meu Estacionamento</h1>
@@ -122,6 +142,10 @@
             </div>
             <div class="w3-col l6">
                 <h1>Pátio</h1>
+                <div class="w3-row-padding" id="exibe_patio">
+                    <p>Carregando...</p>
+
+                </div>
             </div>
 
       </div>

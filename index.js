@@ -37,6 +37,19 @@ app.get('/patio', (req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
           var dbo = db.db("patio");
+          dbo.collection("controle").find({tipo:"entrada"}).toArray(function(err, result) {
+              if (err) throw err;
+              //console.log(result);
+              res.send(result);     
+              db.close();         
+            });
+      });
+});
+app.get('/relatorio_patio', (req, res) => {
+    console.log('Listando relatorio pátio...');
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+          var dbo = db.db("patio");
           dbo.collection("controle").find({}).toArray(function(err, result) {
               if (err) throw err;
               //console.log(result);
@@ -45,6 +58,7 @@ app.get('/patio', (req, res) => {
             });
       });
 });
+
 
 app.post('/add_car_patio',(request,response) => { 
     console.log("Adicionando carro #",request.body.codigocar," no pátio");
@@ -64,9 +78,6 @@ app.post('/add_car_patio',(request,response) => {
             db.close();
         });
     });
-});
-app.post('/rm_car_patio',(request,response) => {   
-    console.log(request.body.idcarro);
 });
 
 
